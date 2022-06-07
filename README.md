@@ -18,26 +18,26 @@ This module is installed using [node package manager (npm)][npm]:
 
 It is loaded using the `require()` function:
 
-    var asn1 = require("asn1-ber")
+    const asn1 = require("asn1-ber");
 
 A reader or writer can then be created to read or write objects:
 
 	// Let's create an ASN1.BER object using the writing interface:
-	var writer = new asn1.BerWriter()
+	let writer = new asn1.BerWriter;
 
-	writer.startSequence()
-	writer.writeBoolean(true)
-	writer.writeBoolean(false)
-	writer.endSequence()
+	writer.startSequence();
+	writer.writeBoolean(true);
+	writer.writeBoolean(false);
+	writer.endSequence();
 
-	var buffer = writer.buffer
+	let buffer = writer.buffer;
 
 	// Now let's read the data back from the buffer:
-	var reader = new asn1.BerReader(buffer)
+	let reader = new asn1.BerReader(buffer);
 
-	reader.readSequence()
-	reader.readBoolean() // first boolean is true
-	reader.readBoolean() // second boolean is false
+	reader.readSequence();
+	reader.readBoolean(); // first boolean is true
+	reader.readBoolean(); // second boolean is false
 
 It is assumed that users are somewhat familiar with ASN1 and BER encoding.
 
@@ -57,7 +57,7 @@ constants could be used (or a number if the required type is not defined) to
 specify the tag which be used when encoding the value, and in this particular
 case would default to `asn1.Ber.Boolean`, e.g.:
 
-	writer.writeBoolean(true, asn1.Ber.Boolean)
+	writer.writeBoolean(true, asn1.Ber.Boolean);
 
 The following constants are defined in this object:
 
@@ -115,18 +115,18 @@ object instance.
 In the following example a simple sequence of two boolean objects is written,
 then the `Buffer` instance obtained:
 
-	var writer = new asn1.BerWriter()
+	let writer = new asn1.BerWriter;
 
-	writer.startSequence()
-	writer.writeBoolean(true)
-	writer.writeBoolean(false)
-	writer.endSequence()
+	writer.startSequence();
+	writer.writeBoolean(true);
+	writer.writeBoolean(false);
+	writer.endSequence();
 
-	var buffer = writer.buffer
+	let buffer = writer.buffer;
 
 The resulting buffer will contain the following:
 
-	var buffer = Buffer.alloc([
+	let buffer = Buffer.from([
 			asn1.Ber.Sequence | asn1.Ber.Constructor,
 			6, // length of the data contained within the sequence
 			asn1.Ber.Boolean,
@@ -135,18 +135,18 @@ The resulting buffer will contain the following:
 			asn1.Ber.Boolean,
 			1,
 			0, // false
-		)
+		]);
 
 ### new asn1.BerWriter([options])
 
 Instantiates and returns an instance of the `BerWriter` class:
 
-	var options = {
+	let options = {
 		size: 1024,
-		growthFactor: 8
-	}
+		growthFactor: 8,
+	};
 
-	var writer = new asn1.BerWriter(options)
+	let writer = new asn1.BerWriter(options);
 
 The optional `options` parameter is an object, and can contain the following
 items:
@@ -169,7 +169,7 @@ items:
 Once an object is complete the Node.js `Buffer` instance can be obtained via the
 writes `buffer` attribute, e.g.:
 
-	var buffer = writer.buffer
+	let buffer = writer.buffer;
 
 The `Buffer` instance returned will be a copy of the internal instance used by
 the writer and can be safely modified once obtained.
@@ -187,11 +187,11 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example writes two sequences and a boolean, each nested in the
 previous:
 
-	writer.startSequence()
-	writer.startSequence()
-	writer.writeBoolean()
-	writer.endSequence()
-	writer.endSequence()
+	writer.startSequence();
+	writer.startSequence();
+	writer.writeBoolean();
+	writer.endSequence();
+	writer.endSequence();
 
 ### writer.writeBoolean(boolean, [tag])
 
@@ -204,8 +204,8 @@ if the required type is not pre-defined, and defaults to `asn1.Ber.Boolean`.
 The following example writes two different boolean values, and in one case the
 `tag` is specified as `asn1.Ber.Integer`:
 
-	writer.writeBoolean(false)
-	writer.writeBoolean(true, asn1.Ber.Integer)
+	writer.writeBoolean(false);
+	writer.writeBoolean(true, asn1.Ber.Integer);
 
 ### writer.writeBuffer(buffer, [tag])
 
@@ -224,11 +224,11 @@ The following two examples write a single byte in different ways.  One provides
 a tag, in which case `writeBuffer()` will write the tag and length, and in the
 other no tag is provided, so `writeBuffer()` will NOT write a tag or length:
 
-	var b1 = Buffer.alloc([0x01])
-	writer.writeBuffer(b1, asn1.Ber.Integer)
+	let b1 = Buffer.from([0x01]);
+	writer.writeBuffer(b1, asn1.Ber.Integer);
 
-	var b2 = Buffer.alloc([asn1.Ber.Integer, 0x01, 0x01])
-	writer.writeBuffer(b2)
+	let b2 = Buffer.from([asn1.Ber.Integer, 0x01, 0x01]);
+	writer.writeBuffer(b2);
 
 ### writer.writeByte(byte)
 
@@ -241,9 +241,9 @@ The `writeByte()` method can be used to insert ad-hoc data into the data stream.
 The following example writes the integer `2` using only the `writeByte()` method
 instead of using the `writeInt()` method:
 
-	writer.writeByte(asn1.Ber.Integer) // tag
-	writer.writeByte(1) // length == 1
-	writer.writeByte(2) // integer == 2
+	writer.writeByte(asn1.Ber.Integer); // tag
+	writer.writeByte(1); // length == 1
+	writer.writeByte(2); // integer == 2
 
 ### writer.writeEnumeration(integer, [tag])
 
@@ -257,7 +257,7 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example writes the value `2` which identifies a value for an
 enumerated type:
 
-	writer.writeEnumeration(2, asn1.Ber.Enumeration)
+	writer.writeEnumeration(2, asn1.Ber.Enumeration);
 
 ### writer.writeInt(integer, [tag])
 
@@ -271,7 +271,7 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example writes the value `-123`, and since no tag is provided the
 type `asn1.Ber.Integer` will be used:
 
-	writer.writeInt(-123)
+	writer.writeInt(-123);
 
 ### writer.writeNull()
 
@@ -281,8 +281,8 @@ and the second is the 1 byte integer `0`.
 The following example writes a key and value pair, with the value being
 specified as undefined using `writeNull()`:
 
-	writer.writeString("description") // key is a string
-	writer.writeNull() // value is undefined
+	writer.writeString("description"); // key is a string
+	writer.writeNull(); // value is undefined
 
 ### writer.writeOID(oid, [tag])
 
@@ -296,7 +296,7 @@ and defaults to `asn1.Ber.OID`.
 The following example writes the object identifier `1.3.6.1`, and since no tag
 is provided the type `asn1.Ber.OID` will be used:
 
-	writer.writeOID("1.3.6.1")
+	writer.writeOID("1.3.6.1");
 
 ### writer.writeString(string, [tag])
 
@@ -310,7 +310,7 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example writes the string `description`, and since no tag is
 provided the type `asn1.Ber.OctetString` will be used:
 
-	writer.writeString("description")
+	writer.writeString("description");
 
 ### writer.writeStringArray(strings, [tag])
 
@@ -325,10 +325,10 @@ type is not pre-defined, and defaults to `asn1.Ber.OctetString`.
 The following two examples are equivilant, and will both write two strings, and
 since no tag is provided the type `asn1.Ber.OctetString` will be used:
 
-	writer.writeString("one")
-	writer.writeString("two")
+	writer.writeString("one");
+	writer.writeString("two");
 
-	writer.writeStringArray(["one", "two"])
+	writer.writeStringArray(["one", "two"]);
 
 ## Reading Objects
 
@@ -347,7 +347,7 @@ incremented based on the amount of data read per method call.
 In the following example the appropriate methods are used to read a buffer
 containing an ASN1.BER object:
 
-	var buffer = Buffer.alloc([
+	let buffer = Buffer.from([
 			asn1.Ber.Sequence | asn1.Ber.Constructor,
 			6, // length of the data contained within the sequence
 			asn1.Ber.Boolean,
@@ -356,19 +356,19 @@ containing an ASN1.BER object:
 			asn1.Ber.Boolean,
 			1,
 			0, // false
-		)
+		]);
 
-	var reader = new asn1.BerReader(buffer)
+	let reader = new asn1.BerReader(buffer);
 
-	reader.readSequence(asn1.Ber.Sequence | asn1.Ber.Constructor)
-	reader.readBoolean() // 1st boolean is true
-	reader.readBoolean() // 2nd boolean is false
+	reader.readSequence(asn1.Ber.Sequence | asn1.Ber.Constructor);
+	reader.readBoolean(); // 1st boolean is true
+	reader.readBoolean(); // 2nd boolean is false
 
 ### new asn1.BerReader(buffer)
 
 Instantiates and returns an instance of the `BerReader` class:
 
-	var reader = new asn1.BerReader(buffer)
+	let reader = new asn1.BerReader(buffer);
 
 The `buffer` parameter is an instance of the Node.js `Buffer` class, this is
 typically referred to as the "input buffer" throughout this documentation.
@@ -377,7 +377,7 @@ typically referred to as the "input buffer" throughout this documentation.
 
 The `peek()` method is sugar for the following method call:
 
-	var byte = reader.readByte(true)
+	let byte = reader.readByte(true);
 
 ### reader.readBoolean([tag])
 
@@ -391,7 +391,7 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example reads a boolean value, since no tag is specified the
 type `asn1.Ber.Boolean` is used to validate the type being read:
 
-	var bool = reader.readBoolean()
+	let bool = reader.readBoolean()
 
 ### reader.readByte([peek])
 
@@ -406,10 +406,10 @@ The following example reads a a boolean value if the next object is of the type
 `asn1.Ber.Boolean`:
 
 	if (reader.readByte(true) == asn1.Ber.Boolean) {
-		reader.readByte() // consume the type
-		reader.readByte() // consume length, we assume 1, we /should/ really check
+		reader.readByte(); // consume the type
+		reader.readByte(); // consume length, we assume 1, we /should/ really check
 
-		var value = reader.readByte() ? true : false
+		let value = reader.readByte() ? true : false;
 	}
 
 ### reader.readEnumeration([tag])
@@ -424,7 +424,7 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example reads an enumerated value, since no tag is specified the
 type `asn1.Ber.Enumeration` is used to validate the type being read:
 
-	var integer = reader.readEnumeration()
+	let integer = reader.readEnumeration();
 
 ### reader.readInt([tag])
 
@@ -438,7 +438,7 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example reads an integer value, since no tag is specified the
 type `asn1.Ber.Integer` is used to validate the type being read:
 
-	var integer = reader.readInt()
+	let integer = reader.readInt();
 
 ### reader.readOID([tag])
 
@@ -452,7 +452,7 @@ object, or a number if the required type is not pre-defined, and defaults to
 The following example reads a object identifier, since no tag is specified the
 type `asn1.Ber.OID` is used to validate the type being read:
 
-	var oid = reader.readOID()
+	let oid = reader.readOID();
 
 ### reader.readSequence([tag])
 
@@ -470,34 +470,47 @@ if `tag` was specified then the sequence type will be equal to `tag`.
 The following example reads all sequences, each containing a key and value,
 until there are no more sequences left:
 
-	var kvs = []
+	let kvs = [];
 
 	while (true) {
-		var tag = reader.readSequence() // We don't care about the sequences type
+		let tag = reader.readSequence(); // We don't care about the sequences type
 		if (! tag)
-			break
+			break;
 
-		var key = reader.readString()
-		var value = reader.readString()
+		let key = reader.readString();
+		let value = reader.readString();
 
-		kvs.push({key: key, value: value})
+		kvs.push({key, value});
 	}
 
-### reader.readString([tag], [retbuf])
+### reader.readBuffer([tag])
 
-The `readString()` method reads a value from the input buffer, and if `retbuf`
-is specified as `true` will return a Node.js `Buffer` instance containing the
-bytes read, otherwise an attempt to parse the data as a `utf8` string is made
-and the resulting string will be returned, i.e. not a `Buffer` instance.
+The `readBuffer()` method reads a value from the input buffer and returns the
+raw contents as `Buffer`.
 
 The optional `tag` parameter is one of the constants defined in the `asn1.Ber`
 object, or a number if the required type is not pre-defined, and defaults to
-`asn1.Ber.OctetString`.
+`asn1.Ber.OctetString` if omitted or `undefined`.
 
-The following example reads a string and requests it be returned as a `Buffer`
-instance:
+The following example reads an OCTET STRING as Buffer:
 
-	var buffer = reader.readString(asn1.Ber.OctetString, true)
+	let buffer = reader.readBuffer(asn1.Ber.OctetString);
+
+### reader.readString([tag], [encoding])
+
+The `readString()` method reads a value from the input buffer and decodes it
+to a string using specified encoding, which defaults to `'utf-8'`.
+
+The optional `tag` parameter is one of the constants defined in the `asn1.Ber`
+object, or a number if the required type is not pre-defined, and defaults to
+`asn1.Ber.OctetString` if omitted or `undefined`.
+
+For backwards compatibility, if `encoding` is `true` then a Buffer is returned
+instead.  This is deprecated, use `readBuffer()` instead.
+
+The following example reads an OCTET STRING and decodes it as utf-8:
+
+	let string = reader.readString(asn1.Ber.OctetString);
 
 # Changes
 
